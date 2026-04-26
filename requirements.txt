@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+motor
+beanie
+pydantic[email]
+python-jose[cryptography]
+passlib[bcrypt]
+redis
+httpx
+python-multipart
