@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react"
-import { ShoppingCart, Funnel, MagnifyingGlass, ArrowRight, Star } from "@phosphor-icons/react"
+import { ShoppingCartIcon, FunnelIcon, MagnifyingGlassIcon, ArrowRightIcon, StarIcon, ClockIcon } from "@phosphor-icons/react"
 import SkeletonCard from "@/components/ui/SkeletonCard"
-
-const products = [
-  { id: 1, name: "RoboCore Pro v4", category: "Actuators", price: 899, rating: 4.9, img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400" },
-  { id: 2, name: "NeuralLink Hub", category: "Processors", price: 1299, rating: 5.0, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400" },
-  { id: 3, name: "VisionEye 4K", category: "Sensors", price: 450, rating: 4.8, img: "https://images.unsplash.com/photo-1626080358513-356ec397576c?q=80&w=400" },
-  { id: 4, name: "LipoCell X1", category: "Battery", price: 299, rating: 4.7, img: "https://images.unsplash.com/photo-1563770660941-20978e870813?q=80&w=400" },
-  { id: 5, name: "ServoGrip Mini", category: "Manipulation", price: 199, rating: 4.6, img: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?q=80&w=400" },
-  { id: 6, name: "AeroFrame S2", category: "Chassis", price: 2100, rating: 5.0, img: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=400" }
-]
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 
 const ShopPage = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -19,83 +13,90 @@ const ShopPage = () => {
     return () => clearTimeout(timer)
   }, [])
 
+  const featuredProduct = { 
+    id: 1, 
+    name: "AeroRocket STEM Kit", 
+    category: "STEM", 
+    price: 120, 
+    rating: 5.0, 
+    desc: "A smart desktop companion inspired by the future. express your world with AI.",
+    img: "/emo-high-res.png" 
+  }
+
   return (
     <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16" data-aos="fade-up">
         <div>
-          <h1 className="text-5xl font-black tracking-tighter mb-4">THE STORE</h1>
-          <p className="text-muted-foreground text-lg">Curated hardware for the ambitious builder.</p>
-        </div>
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          <div className="relative flex-grow md:w-80">
-            <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Search components..." 
-              className="w-full bg-secondary/50 border rounded-full py-3 pl-12 pr-6 text-sm focus:ring-2 ring-accent outline-none transition-all"
-            />
-          </div>
-          <button className="p-3 border rounded-full hover:bg-muted transition-colors">
-            <Funnel size={20} weight="bold" />
-          </button>
+          <h1 className="text-5xl font-black tracking-tighter mb-4 text-primary">THE COLLECTION</h1>
+          <p className="text-muted-foreground text-lg">Quality over quantity. Discover our curated masterworks.</p>
         </div>
       </div>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {isLoading ? (
-          Array(8).fill(0).map((_, i) => <SkeletonCard key={i} />)
-        ) : (
-          products.map((product) => (
-            <div 
-              key={product.id} 
-              data-aos="fade-up"
-              className="group relative bg-card border rounded-[2rem] p-5 hover:border-accent hover:shadow-2xl hover:shadow-accent/5 transition-all duration-500 overflow-hidden"
-            >
-              <div className="aspect-[4/5] bg-muted rounded-[1.5rem] overflow-hidden relative mb-6">
-                <img 
-                  src={product.img} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                />
-                <div className={`absolute top-4 left-4 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/20 text-white shadow-lg
-                  ${product.category === 'Processors' ? 'bg-neon-purple/80' : 
-                    product.category === 'Sensors' ? 'bg-neon-blue/80' : 
-                    product.category === 'Battery' ? 'bg-neon-pink/80' : 'bg-black/60'}
-                `}>
-                  {product.category}
-                </div>
-              </div>
+      {/* Single Product Highlight */}
+      <div className="grid lg:grid-cols-2 gap-12 mb-24 items-center bg-secondary/20 rounded-[3rem] p-8 lg:p-12 border border-black/5" data-aos="zoom-in">
+        <div className="aspect-square bg-muted rounded-[2.5rem] overflow-hidden relative group">
+          {isLoading ? (
+            <div className="w-full h-full skeleton-shimmer" />
+          ) : (
+            <img 
+              src={featuredProduct.img} 
+              alt={featuredProduct.name} 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+            />
+          )}
+          <Badge className="absolute top-6 left-6 bg-primary text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-xl">
+            Featured Masterpiece
+          </Badge>
+        </div>
+        
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 text-neon-blue">
+            <StarIcon size={20} weight="fill" />
+            <StarIcon size={20} weight="fill" />
+            <StarIcon size={20} weight="fill" />
+            <StarIcon size={20} weight="fill" />
+            <StarIcon size={20} weight="fill" />
+            <span className="ml-2 font-bold text-sm">5.0 (250+ Reviews)</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter">{featuredProduct.name}</h2>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            {featuredProduct.desc}
+          </p>
+          <div className="text-3xl font-black text-primary">${featuredProduct.price}.00</div>
+          <div className="flex gap-4">
+            <Button className="flex-grow rounded-full py-8 font-black uppercase tracking-widest text-xs bg-primary shadow-xl shadow-primary/20">
+              Add to Bag <ShoppingCartIcon size={20} weight="bold" className="ml-2" />
+            </Button>
+            <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-black/10 shrink-0">
+              <ArrowRightIcon size={24} weight="bold" />
+            </Button>
+          </div>
+        </div>
+      </div>
 
-              <div>
-                <div className="flex items-center gap-1 text-accent mb-2">
-                  <Star size={14} weight="fill" />
-                  <span className="text-xs font-bold">{product.rating}</span>
-                </div>
-                <h3 className="text-lg font-bold tracking-tight mb-2 group-hover:text-accent transition-colors">
-                  {product.name}
-                </h3>
-                <div className="flex justify-between items-center mt-6">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Price</span>
-                    <span className="text-xl font-black">${product.price}</span>
-                  </div>
-                  <button className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl shadow-black/10">
-                    <ShoppingCart size={22} weight="bold" />
-                  </button>
-                </div>
+      {/* Coming Soon Section */}
+      <div data-aos="fade-up">
+        <h3 className="text-2xl font-black tracking-tighter mb-10 flex items-center gap-3">
+          <ClockIcon size={24} weight="bold" className="text-neon-pink" />
+          UPCOMING RELEASES
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="border border-dashed border-black/20 dark:border-white/20 rounded-[2.5rem] p-10 flex flex-col items-center justify-center text-center gap-4 group hover:bg-secondary/10 transition-colors">
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-4 group-hover:animate-pulse">
+                <ClockIcon size={32} weight="bold" className="text-muted-foreground" />
               </div>
-
-              {/* Quick Look Overlay */}
-              <div className="absolute inset-x-0 bottom-0 p-5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-background via-background/95 to-transparent">
-                <button className="w-full bg-secondary text-secondary-foreground py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-accent hover:text-white transition-colors">
-                  View Specifications <ArrowRight size={14} weight="bold" />
-                </button>
-              </div>
+              <h4 className="font-black tracking-tight text-lg opacity-50 uppercase tracking-widest">Project 0{i+1}</h4>
+              <p className="text-muted-foreground text-sm max-w-[200px]">
+                Currently in the engineering lab. Estimated release: Q3 2026.
+              </p>
+              <Button variant="ghost" className="mt-4 rounded-full text-[10px] font-black uppercase tracking-widest text-primary">
+                Notify Me
+              </Button>
             </div>
-          ))
-        )}
+          ))}
+        </div>
       </div>
     </div>
   )

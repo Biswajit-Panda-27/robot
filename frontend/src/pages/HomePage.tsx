@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import { ArrowRight, ShoppingCart } from "lucide-react"
+import { ArrowRightIcon, ShoppingCartIcon, SparkleIcon } from "@phosphor-icons/react"
 import Hero from "@/components/sections/Hero"
 import Features from "@/components/sections/Features"
-import SkeletonCard from "@/components/ui/SkeletonCard"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -18,48 +19,56 @@ const HomePage = () => {
       <Hero />
       <Features />
       
-      {/* Product Grid Section */}
-      <section className="py-20 max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Featured Hardware</h2>
-            <p className="text-muted-foreground">Ready to ship components for your next build.</p>
-          </div>
-          <button className="text-accent font-semibold flex items-center gap-1 hover:gap-2 transition-all">
-            View All <ArrowRight size={18} />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {isLoading ? (
-            Array(4).fill(0).map((_, i) => <SkeletonCard key={i} />)
-          ) : (
-            [1, 2, 3, 4].map((p) => (
-              <div 
-                key={p} 
-                data-aos="fade-up" 
-                className="group border rounded-2xl p-4 flex flex-col gap-4 hover:border-accent transition-colors bg-card"
-              >
-                <div className="aspect-square bg-muted rounded-xl overflow-hidden relative">
-                  <img 
-                    src={`https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop`} 
-                    alt="Hardware" 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-bold">RoboCore v{p}.0</h3>
-                  <p className="text-sm text-muted-foreground">High-performance actuator</p>
-                </div>
-                <div className="flex justify-between items-center mt-auto">
-                  <span className="text-lg font-bold">$499.00</span>
-                  <button className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                    <ShoppingCart size={18} />
-                  </button>
-                </div>
+      {/* Exclusive Spotlight Section */}
+      <section className="py-24 max-w-7xl mx-auto px-6 overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <div data-aos="fade-right">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+              <SparkleIcon size={14} weight="fill" />
+              Limited First Edition
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-[1.05]">
+              The One & Only <br />
+              <span className="text-muted-foreground/30">AeroRocket.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground mb-10 leading-relaxed max-w-lg">
+              We focus on perfection. Our first-ever STEM kit is designed to inspire the next generation of space explorers. Experience unmatched quality in every part.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button asChild className="rounded-full px-10 py-8 bg-primary hover:bg-primary/90 text-white font-black text-xs uppercase tracking-widest shadow-2xl shadow-primary/30">
+                <Link to="/shop">
+                  Get Yours Now <ArrowRightIcon size={18} weight="bold" className="ml-2" />
+                </Link>
+              </Button>
+              <div className="flex items-center gap-4 px-6 py-4 rounded-full border border-black/5 bg-secondary/20">
+                <div className="w-2 h-2 bg-neon-green rounded-full animate-ping" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Only 15 Units Left</span>
               </div>
-            ))
-          )}
+            </div>
+          </div>
+
+          <div className="relative" data-aos="fade-left">
+            <div className="absolute -inset-10 bg-primary/5 blur-[100px] rounded-full animate-pulse" />
+            <div className="relative aspect-square rounded-[3rem] overflow-hidden border border-black/5 shadow-2xl shadow-black/10">
+              <img 
+                src="/emo-high-res.png" 
+                alt="EMO AI Robot High Res" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h3 className="text-sm font-black uppercase tracking-[0.3em] text-muted-foreground mb-12">Quality Built For Life</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 opacity-50 grayscale">
+            {["Premium", "Hand-Crafted", "Sustainable", "Certified"].map((text) => (
+              <div key={text} className="text-xl font-black tracking-tighter italic">{text}</div>
+            ))}
+          </div>
         </div>
       </section>
     </div>

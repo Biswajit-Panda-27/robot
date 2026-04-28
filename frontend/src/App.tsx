@@ -5,8 +5,10 @@ import "aos/dist/aos.css"
 
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
+import AnnouncementBar from "@/components/layout/AnnouncementBar"
 import HomePage from "@/pages/HomePage"
 import ShopPage from "@/pages/ShopPage"
+import AuthPage from "@/pages/AuthPage"
 
 const App = () => {
   useEffect(() => {
@@ -21,11 +23,13 @@ const App = () => {
   return (
     <Router>
       <div className="min-h-screen flex flex-col selection:bg-accent selection:text-white">
+        <AnnouncementBar />
         <Navbar />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/auth" element={<AuthPage />} />
           </Routes>
         </main>
         <Footer />
