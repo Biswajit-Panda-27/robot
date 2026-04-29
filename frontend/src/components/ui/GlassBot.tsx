@@ -179,7 +179,7 @@ const GlassBot = ({ rotateX: propRotateX, rotateY: propRotateY, className = "", 
                   {isAngry && (
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
                       {[...Array(4)].map((_, i) => (
-                        <motion.span key={i} initial={{ opacity: 0, y: 0 }} animate={{ opacity: [0, 1, 0], y: -60, x: (i % 2 === 0 ? 30 : -30), scale: 2 }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }} className="absolute text-[14px] font-black text-red-500">Z</motion.span>
+                        <motion.span key={i} initial={{ opacity: 0, y: 0 }} animate={{ opacity: [0, 1, 0], y: -60, x: (i % 2 === 0 ? 30 : -30), scale: 2 }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }} className="absolute text-[14px] font-black text-red-500">#</motion.span>
                       ))}
                     </div>
                   )}
