@@ -101,7 +101,7 @@ const AccountPage = () => {
                   <div className="p-8 rounded-[2.5rem] bg-secondary/30 border border-black/5">
                     <HouseIcon size={32} weight="fill" className="mb-4 text-primary opacity-50" />
                     <p className="text-[10px] font-black uppercase tracking-widest opacity-70">Saved Address</p>
-                    <h3 className="text-xl font-black tracking-tight mt-2">{user.address?.city || "None Saved"}</h3>
+                    <h3 className="text-xl font-black tracking-tight mt-2">{user.address?.pincode ? `Active: ${user.address.pincode}` : "None Saved"}</h3>
                   </div>
                   <div className="p-8 rounded-[2.5rem] bg-secondary/30 border border-black/5">
                     <UserIcon size={32} weight="fill" className="mb-4 text-primary opacity-50" />
