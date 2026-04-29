@@ -3,12 +3,18 @@ import { createRoot } from "react-dom/client"
 
 import "./index.css"
 import App from "./App.tsx"
-import { ThemeProvider } from "@/components/theme-provider.tsx"
+import { ThemeProvider } from "@/contexts/ThemeContext.tsx"
+import { CartProvider } from "@/contexts/CartContext.tsx"
+import { OrdersProvider } from "@/contexts/OrdersContext.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <App />
+      <CartProvider>
+        <OrdersProvider>
+          <App />
+        </OrdersProvider>
+      </CartProvider>
     </ThemeProvider>
   </StrictMode>
 )

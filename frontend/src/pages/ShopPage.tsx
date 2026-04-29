@@ -4,9 +4,13 @@ import SkeletonCard from "@/components/ui/SkeletonCard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
+import { useCart } from "@/contexts/CartContext"
 
 const ShopPage = () => {
   const [isLoading, setIsLoading] = useState(true)
+  const { addToCart } = useCart()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500)
@@ -65,8 +69,14 @@ const ShopPage = () => {
           </p>
           <div className="text-3xl font-black text-primary">${featuredProduct.price}.00</div>
           <div className="flex gap-4">
-            <Button className="flex-grow rounded-full py-8 font-black uppercase tracking-widest text-xs bg-primary shadow-xl shadow-primary/20">
-              Add to Bag <ShoppingCartIcon size={20} weight="bold" className="ml-2" />
+            <Button 
+              onClick={() => {
+                addToCart(featuredProduct)
+                navigate("/cart")
+              }}
+              className="flex-grow rounded-full py-8 font-black uppercase tracking-widest text-xs bg-primary shadow-xl shadow-primary/20"
+            >
+              Add to Cart <ShoppingCartIcon size={20} weight="bold" className="ml-2" />
             </Button>
             <Button variant="outline" size="icon" className="w-16 h-16 rounded-full border-black/10 shrink-0">
               <ArrowRightIcon size={24} weight="bold" />

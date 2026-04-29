@@ -9,6 +9,9 @@ import AnnouncementBar from "@/components/layout/AnnouncementBar"
 import HomePage from "@/pages/HomePage"
 import ShopPage from "@/pages/ShopPage"
 import AuthPage from "@/pages/AuthPage"
+import CartPage from "@/pages/CartPage"
+import OrdersPage from "@/pages/OrdersPage"
+import PurchasePage from "@/pages/PurchasePage"
 
 const App = () => {
   useEffect(() => {
@@ -30,6 +33,9 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/purchase" element={<PurchasePage />} />
           </Routes>
         </main>
         <Footer />
