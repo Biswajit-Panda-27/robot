@@ -1,13 +1,22 @@
 import { useState } from "react"
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion"
-import { EnvelopeIcon, LockIcon, ArrowRightIcon, UserIcon, SparkleIcon, CaretLeftIcon } from "@phosphor-icons/react"
+import { EnvelopeIcon, LockIcon, ArrowRightIcon, UserIcon, CaretLeftIcon, WarningCircleIcon } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "@/contexts/AuthContext"
 import GlassBot from "@/components/ui/GlassBot"
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
+  const [email, setEmail] = useState("")
+  const [name, setName] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  
+  const { login, register } = useAuth()
+  const navigate = useNavigate()
 
   // High-Precision 3D Mouse Tracking
   const x = useMotionValue(0)
@@ -17,6 +26,62 @@ const AuthPage = () => {
 
   const rotateX = useTransform(mouseY, [-500, 500], [15, -15])
   const rotateY = useTransform(mouseX, [-500, 500], [-20, 20])
+
+  const validate = () => {
+    setError("")
+    
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.")
+      return false
+    }
+
+    // Password Validation
+    const hasCapital = /[A-Z]/.test(password)
+    const hasNumber = /[0-9]/.test(password)
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    
+    if (!hasCapital || !hasNumber || !hasSpecial) {
+      setError("Password must contain a capital letter, a number, and a special character.")
+      return false
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.")
+      return false
+    }
+
+    if (!isLogin && !name.trim()) {
+      setError("Please enter your name.")
+      return false
+    }
+
+    return true
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!validate()) return
+
+    if (isLogin) {
+      const res = login(email, password)
+      if (res.success) {
+        navigate('/account')
+      } else {
+        setError(res.message)
+      }
+    } else {
+      const res = register(name, email, password)
+      if (res.success) {
+        setSuccess(res.message)
+        setIsLogin(true) // Switch to login after successful register
+        setError("")
+      } else {
+        setError(res.message)
+      }
+    }
+  }
 
   const handleMouseMove = (event: React.MouseEvent) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -47,7 +112,6 @@ const AuthPage = () => {
 
         {/* Left Side: Seamless 3D Showcase */}
         <div className="hidden lg:flex items-center justify-center relative">
-          {/* Animated Glow behind the bot */}
           <motion.div
             style={{
               x: useTransform(mouseX, [-500, 500], [20, -20]),
@@ -62,12 +126,6 @@ const AuthPage = () => {
           >
             <GlassBot rotateX={rotateX} rotateY={rotateY} />
           </motion.div>
-
-          {/* Minimal Brand Detail */}
-          <div className="absolute bottom-10 flex flex-col items-center gap-4">
-            <div className="h-20 w-px bg-linear-to-b from-primary/50 to-transparent" />
-            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-muted-foreground/30"></span>
-          </div>
         </div>
 
         {/* Right Side: Compact Auth Panel */}
@@ -90,8 +148,7 @@ const AuthPage = () => {
                 <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Security Node</span>
               </div>
               <h1 className="text-5xl lg:text-5xl font-black tracking-tighter leading-[0.9] mb-2">
-                {isLogin ? "LOG IN" : "SIGN UP"} <br />
-
+                {isLogin ? "LOG IN" : "SIGN UP"}
               </h1>
 
               {/* Compact Tab Switcher */}
@@ -102,13 +159,13 @@ const AuthPage = () => {
                   style={{ width: 'calc(50% - 0.25rem)', left: isLogin ? '0.25rem' : '50%' }}
                 />
                 <button
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => { setIsLogin(true); setError(""); setSuccess(""); }}
                   className={`relative z-10 px-6 py-2 text-[9px] font-black uppercase tracking-widest transition-colors ${isLogin ? "text-primary" : "text-muted-foreground"}`}
                 >
                   Sign In
                 </button>
                 <button
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
                   className={`relative z-10 px-6 py-2 text-[9px] font-black uppercase tracking-widest transition-colors ${!isLogin ? "text-primary" : "text-muted-foreground"}`}
                 >
                   Register
@@ -116,8 +173,34 @@ const AuthPage = () => {
               </div>
             </div>
 
+            {/* Notifications */}
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }} 
+                  animate={{ opacity: 1, height: "auto" }} 
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-start gap-3 text-destructive"
+                >
+                  <WarningCircleIcon size={18} weight="fill" className="shrink-0 mt-0.5" />
+                  <p className="text-[10px] font-black uppercase tracking-wider leading-relaxed">{error}</p>
+                </motion.div>
+              )}
+              {success && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }} 
+                  animate={{ opacity: 1, height: "auto" }} 
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-6 p-4 rounded-xl bg-neon-green/10 border border-neon-green/20 flex items-start gap-3 text-neon-green"
+                >
+                  <SparkleIcon size={18} weight="fill" className="shrink-0 mt-0.5" />
+                  <p className="text-[10px] font-black uppercase tracking-wider leading-relaxed">{success}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Form Section */}
-            <form className="grid gap-5" onSubmit={(e) => e.preventDefault()}>
+            <form className="grid gap-5" onSubmit={handleSubmit}>
               <div className="grid gap-4">
                 <AnimatePresence mode="wait">
                   {!isLogin && (
@@ -132,6 +215,8 @@ const AuthPage = () => {
                         <UserIcon className="absolute left-0 top-1/2 -translate-y-1/2 text-muted-foreground/60 group-focus-within:text-primary transition-all ml-2" size={16} weight="bold" />
                         <Input
                           placeholder="Your name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
                           className="h-12 pl-10 rounded-none border-none bg-transparent text-base font-black placeholder:text-muted-foreground/60 focus-visible:ring-0"
                         />
                       </div>
@@ -145,6 +230,8 @@ const AuthPage = () => {
                     <Input
                       type="email"
                       placeholder="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="h-12 pl-10 rounded-none border-none bg-transparent text-base font-black placeholder:text-muted-foreground/60 focus-visible:ring-0"
                     />
                   </div>
@@ -156,6 +243,8 @@ const AuthPage = () => {
                     <Input
                       type="password"
                       placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="h-12 pl-10 rounded-none border-none bg-transparent text-base font-black placeholder:text-muted-foreground/60 focus-visible:ring-0"
                     />
                   </div>
@@ -163,24 +252,11 @@ const AuthPage = () => {
               </div>
 
               <div className="mt-2">
-                <Button className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[9px] uppercase tracking-[0.3em] shadow-xl shadow-primary/20 transition-all active:scale-[0.98]">
-                  SUBMIT <ArrowRightIcon size={14} weight="bold" className="ml-2" />
-                </Button>
-              </div>
-
-              <div className=" flex items-center gap-3">
-                <div className="h-px flex-1 bg-black/3 dark:bg-white/3" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 whitespace-nowrap">Continue with Google</span>
-                <div className="h-px flex-1 bg-black/3 dark:bg-white/3" />
-              </div>
-
-              <div className="">
-                <Button
-                  variant="outline"
-                  className="w-full h-12 rounded-xl border-black/10 dark:border-white/10 bg-black text-white hover:bg-white hover:text-black dark:bg-primary dark:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 gap-3 font-black text-[8px] uppercase tracking-widest shadow-sm hover:shadow-xl active:scale-95"
+                <Button 
+                  type="submit"
+                  className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[9px] uppercase tracking-[0.3em] shadow-xl shadow-primary/20 transition-all active:scale-[0.98]"
                 >
-                  <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G" className="w-4 h-4" />
-                  Continue with Google
+                  {isLogin ? "SIGN IN" : "REGISTER NOW"} <ArrowRightIcon size={14} weight="bold" className="ml-2" />
                 </Button>
               </div>
             </form>

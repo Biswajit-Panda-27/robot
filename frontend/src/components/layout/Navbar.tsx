@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/sheet"
 import { Tooltip } from "@/components/ui/tooltip"
 import { useCart } from "@/contexts/CartContext"
+import { useAuth } from "@/contexts/AuthContext"
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme()
   const { totalItems } = useCart()
+  const { isAuthenticated } = useAuth()
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
 
@@ -92,12 +94,12 @@ const Navbar = () => {
             </Link>
           </Tooltip>
 
-            <Button asChild className="hidden lg:flex rounded-full px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10 ml-2">
-              <Link to="/auth">
-                <UserIcon size={18} weight="bold" className="mr-2" />
-                Account
-              </Link>
-            </Button>
+          <Button asChild className="hidden lg:flex rounded-full px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10 ml-2 shadow-lg shadow-primary/20">
+            <Link to={isAuthenticated ? "/account" : "/auth"}>
+              <UserIcon size={18} weight="bold" className="mr-2" />
+              {isAuthenticated ? "My Account" : "Account"}
+            </Link>
+          </Button>
 
             {/* Mobile Menu via Shadcn Sheet */}
             <Sheet>
