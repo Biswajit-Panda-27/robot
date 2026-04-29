@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { ShoppingCartIcon, UserIcon, ListIcon, MoonIcon, SunIcon, RocketIcon, MagnifyingGlassIcon, HeartIcon } from "@phosphor-icons/react"
+import { PackageIcon, UserIcon, ListIcon, MoonIcon, SunIcon, RocketIcon } from "@phosphor-icons/react"
 import { useTheme } from "@/components/theme-provider"
 import { Link, useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { Tooltip } from "@/components/ui/tooltip"
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme()
@@ -60,32 +61,22 @@ const Navbar = () => {
 
         {/* Actions Section */}
         <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="rounded-full w-9 h-9"
-          >
-            <MagnifyingGlassIcon size={18} weight="bold" />
-          </Button>
+          <Tooltip content="Toggle Theme">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-full w-9 h-9"
+            >
+              {theme === "dark" ? <SunIcon size={18} weight="bold" /> : <MoonIcon size={18} weight="bold" />}
+            </Button>
+          </Tooltip>
 
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full w-9 h-9"
-          >
-            {theme === "dark" ? <SunIcon size={18} weight="bold" /> : <MoonIcon size={18} weight="bold" />}
-          </Button>
-          
-          <Button variant="ghost" size="icon" className="rounded-full w-9 h-9 relative">
-            <HeartIcon size={18} weight="bold" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-neon-pink rounded-full" />
-          </Button>
-
-          <Button variant="ghost" size="icon" className="rounded-full w-9 h-9 relative">
-            <ShoppingCartIcon size={18} weight="bold" />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-[10px] text-white rounded-full flex items-center justify-center font-black">0</span>
-          </Button>
+          <Tooltip content="My Orders">
+            <Button variant="ghost" size="icon" className="rounded-full w-9 h-9">
+              <PackageIcon size={18} weight="bold" />
+            </Button>
+          </Tooltip>
 
           <Button asChild className="hidden lg:flex rounded-full px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-[10px] uppercase tracking-widest h-10">
             <Link to="/auth">
