@@ -1,15 +1,25 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+interface Address {
+  country: string;
+  state: string;
+  landmark: string;
+  pincode: string;
+  fullAddress: string;
+}
+
 interface User {
   name: string;
   email: string;
-  password?: string; // Stored for mock validation
+  password?: string;
+  address?: Address;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => { success: boolean; message: string };
   register: (name: string, email: string, password: string) => { success: boolean; message: string };
+  updateAddress: (address: Address) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -21,13 +31,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [registeredUsers, setRegisteredUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    // Load current session
     const savedUser = localStorage.getItem('robot-user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
 
-    // Load registered users database
     const savedUsers = localStorage.getItem('robot-users-db');
     if (savedUsers) {
       setRegisteredUsers(JSON.parse(savedUsers));
@@ -38,26 +46,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (registeredUsers.some(u => u.email === email)) {
       return { success: false, message: "User already exists with this email." };
     }
-
     const newUser = { name, email, password };
     const updatedUsers = [...registeredUsers, newUser];
     setRegisteredUsers(updatedUsers);
     localStorage.setItem('robot-users-db', JSON.stringify(updatedUsers));
-    
     return { success: true, message: "Registration successful! Please login." };
   };
 
   const login = (email: string, password: string) => {
     const foundUser = registeredUsers.find(u => u.email === email && u.password === password);
-    
     if (foundUser) {
-      const sessionUser = { name: foundUser.name, email: foundUser.email };
-      setUser(sessionUser);
-      localStorage.setItem('robot-user', JSON.stringify(sessionUser));
+      setUser(foundUser);
+      localStorage.setItem('robot-user', JSON.stringify(foundUser));
       return { success: true, message: "Login successful!" };
     }
-    
     return { success: false, message: "Invalid email or password." };
+  };
+
+  const updateAddress = (address: Address) => {
+    if (!user) return;
+    const updatedUser = { ...user, address };
+    setUser(updatedUser);
+    localStorage.setItem('robot-user', JSON.stringify(updatedUser));
+
+    const updatedDB = registeredUsers.map(u => u.email === user.email ? updatedUser : u);
+    setRegisteredUsers(updatedDB);
+    localStorage.setItem('robot-users-db', JSON.stringify(updatedDB));
   };
 
   const logout = () => {
@@ -66,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, register, updateAddress, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );
