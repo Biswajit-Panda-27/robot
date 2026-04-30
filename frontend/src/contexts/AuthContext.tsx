@@ -20,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => { success: boolean; message: string };
   register: (name: string, email: string, password: string) => { success: boolean; message: string };
   updateAddress: (address: Address) => void;
+  googleLogin: (token: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -74,13 +75,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('robot-users-db', JSON.stringify(updatedDB));
   };
 
+  const googleLogin = async (token: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const loggedUser = {
+          name: data.user.name,
+          email: data.user.email,
+          token: data.access_token
+        };
+        setUser(loggedUser);
+        localStorage.setItem('robot-user', JSON.stringify(loggedUser));
+        return { success: true, message: "Google login successful!" };
+      } else {
+        return { success: false, message: data.detail || "Google login failed." };
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      return { success: false, message: "Connection error. Please try again." };
+    }
+  };
   const logout = () => {
     setUser(null);
     localStorage.removeItem('robot-user');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, updateAddress, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, register, googleLogin, updateAddress, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

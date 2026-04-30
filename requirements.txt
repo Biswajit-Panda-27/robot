@@ -9,3 +9,5 @@ passlib[bcrypt]
 redis
 httpx
 python-multipart
+boto3
+google-auth

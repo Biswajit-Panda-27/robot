@@ -15,7 +15,9 @@ async def lifespan(app: FastAPI):
     try:
         await init_db()
     except Exception as e:
+        import traceback
         print(f"❌ DB Initialization Error: {e}")
+        traceback.print_exc()
     yield
     # Shutdown logic (if any)
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
+import { useGoogleLogin } from "@react-oauth/google"
 import GlassBot from "@/components/ui/GlassBot"
 
 const AuthPage = () => {
@@ -15,8 +16,23 @@ const AuthPage = () => {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   
-  const { login, register } = useAuth()
+  const { login, register, googleLogin } = useAuth()
   const navigate = useNavigate()
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setError("")
+      const res = await googleLogin(tokenResponse.access_token)
+      if (res.success) {
+        navigate('/account')
+      } else {
+        setError(res.message)
+      }
+    },
+    onError: () => {
+      setError("Google Login Failed. Please try again.")
+    }
+  })
 
   // High-Precision 3D Mouse Tracking
   const x = useMotionValue(0)
@@ -259,6 +275,24 @@ const AuthPage = () => {
                   {isLogin ? "SIGN IN" : "REGISTER NOW"} <ArrowRightIcon size={14} weight="bold" className="ml-2" />
                 </Button>
               </div>
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-black/5 dark:border-white/5"></div>
+                </div>
+                <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.4em]">
+                  <span className="bg-background px-4 text-muted-foreground/60">Orbital Sync</span>
+                </div>
+              </div>
+
+              <Button 
+                type="button"
+                onClick={() => handleGoogleLogin()}
+                variant="outline"
+                className="w-full h-12 rounded-xl border-black/5 dark:border-white/5 bg-secondary/20 hover:bg-secondary/40 text-[9px] font-black uppercase tracking-[0.3em] transition-all group"
+              >
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform" alt="Google" />
+                Continue with Google
+              </Button>
             </form>
           </motion.div>
         </div>
