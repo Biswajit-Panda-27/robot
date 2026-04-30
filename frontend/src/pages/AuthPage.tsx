@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion"
-import { EnvelopeIcon, LockIcon, ArrowRightIcon, UserIcon, CaretLeftIcon, WarningCircleIcon } from "@phosphor-icons/react"
+import { EnvelopeIcon, LockIcon, ArrowRightIcon, UserIcon, CaretLeftIcon, WarningCircleIcon, SparkleIcon } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
