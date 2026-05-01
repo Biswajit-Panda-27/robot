@@ -1,6 +1,7 @@
 from api.models.user import User, Address
+from api.utils.s3 import upload_image_to_s3, delete_image_from_s3
 from api.schemas.user_schema import UserUpdate, AddressCreate, AddressUpdate
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 
 class UserController:
     @staticmethod
@@ -8,14 +9,36 @@ class UserController:
         """
         Updates basic profile info: Name, Mobile, Secondary Mobile.
         """
-        if data.name is not None: current_user.name = data.name
-        if data.mobile is not None: current_user.mobile = data.mobile
-        if data.secondary_mobile is not None: current_user.secondary_mobile = data.secondary_mobile
-        if data.dob is not None: current_user.dob = data.dob
-        if data.avatar is not None: current_user.avatar = data.avatar
+        # Use model_dump to get only the fields that were actually provided in the request
+        update_data = data.model_dump(exclude_unset=True)
+        
+        # If avatar is being updated or removed, try to delete the old one from S3
+        if "avatar" in update_data and current_user.avatar:
+            if current_user.avatar.startswith("https://"):
+                await delete_image_from_s3(current_user.avatar)
+
+        for field, value in update_data.items():
+            setattr(current_user, field, value)
         
         await current_user.save()
         return current_user
+
+    @staticmethod
+    async def upload_avatar(current_user: User, file: UploadFile):
+        """
+        Uploads avatar to S3 and updates user record.
+        """
+        try:
+            # Upload to S3 (stored in 'avatars' folder)
+            s3_url = await upload_image_to_s3(file, folder="avatars")
+            
+            # Update user record
+            current_user.avatar = s3_url
+            await current_user.save()
+            
+            return {"success": True, "avatar": s3_url}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     async def add_address(current_user: User, address_data: AddressCreate):

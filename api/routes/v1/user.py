@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from api.models.user import User
 from api.services.auth_service import AuthService
 from api.schemas.user_schema import UserUpdate, AddressCreate, AddressUpdate
@@ -16,6 +16,13 @@ async def update_profile(
     current_user: User = Depends(AuthService.get_current_user)
 ):
     return await UserController.update_profile(current_user, data)
+
+@router.post("/avatar")
+async def upload_avatar(
+    file: UploadFile = File(...),
+    current_user: User = Depends(AuthService.get_current_user)
+):
+    return await UserController.upload_avatar(current_user, file)
 
 @router.post("/address")
 async def add_address(
