@@ -40,24 +40,24 @@
 @layer base {
   :root {
     --background: #ffffff;
-    --foreground: #0f172a;
+    --foreground: #020617;
     --card: #ffffff;
-    --card-foreground: #0f172a;
+    --card-foreground: #020617;
     --popover: #ffffff;
-    --popover-foreground: #0f172a;
-    --primary: #6366f1; /* Indigo */
+    --popover-foreground: #020617;
+    --primary: #4f46e5;
     --primary-foreground: #ffffff;
     --secondary: #f1f5f9;
     --secondary-foreground: #0f172a;
-    --muted: #f1f5f9;
+    --muted: #f8fafc;
     --muted-foreground: #64748b;
-    --accent: #8b5cf6; /* Violet */
+    --accent: #6366f1;
     --accent-foreground: #ffffff;
     --destructive: #ef4444;
     --destructive-foreground: #ffffff;
     --border: #e2e8f0;
-    --input: #e2e8f0;
-    --ring: #6366f1;
+    --input: #f1f5f9;
+    --ring: #4f46e5;
   }
 
   .dark {
@@ -67,19 +67,19 @@
     --card-foreground: #f8fafc;
     --popover: #0f172a;
     --popover-foreground: #f8fafc;
-    --primary: #818cf8;
-    --primary-foreground: #0f172a;
+    --primary: #6366f1;
+    --primary-foreground: #ffffff;
     --secondary: #1e293b;
     --secondary-foreground: #f8fafc;
-    --muted: #1e293b;
+    --muted: #0f172a;
     --muted-foreground: #94a3b8;
-    --accent: #a78bfa;
-    --accent-foreground: #0f172a;
+    --accent: #818cf8;
+    --accent-foreground: #ffffff;
     --destructive: #7f1d1d;
     --destructive-foreground: #f8fafc;
     --border: #1e293b;
     --input: #1e293b;
-    --ring: #818cf8;
+    --ring: #6366f1;
   }
 }
 
@@ -89,80 +89,18 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased selection:bg-accent/30 transition-colors duration-500;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  /* Global Pointer Policy */
+  a, 
+  button, 
+  [role="button"],
+  svg,
+  .cursor-pointer {
+    cursor: pointer !important;
   }
 }
 
-/* Premium Apple-style Glassmorphism */
 .glass {
   @apply bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 dark:border-white/10;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
-}
-
-/* Skeleton Shimmer */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.skeleton-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.skeleton-shimmer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.2) 50%,
-    rgba(255,255,255,0) 100%
-  );
-  animation: shimmer 1.5s infinite;
-}
-
-/* Premium Colorful Effects */
-.glow-blue {
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-}
-.glow-purple {
-  box-shadow: 0 0 20px rgba(188, 19, 254, 0.3);
-}
-.glow-pink {
-  box-shadow: 0 0 20px rgba(255, 0, 222, 0.3);
-}
-
-.mesh-gradient {
-  background-color: var(--background);
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(217, 70, 239, 0.15) 0px, transparent 50%);
-}
-
-.mesh-gradient-dark {
-  background-color: var(--background);
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.3) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(139, 92, 246, 0.3) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(217, 70, 239, 0.3) 0px, transparent 50%);
-}
-
-.animate-pulse-slow {
-  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
