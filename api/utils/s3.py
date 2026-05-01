@@ -43,3 +43,21 @@ async def upload_image_to_s3(file: UploadFile, folder: str = "products") -> str:
         raise Exception("AWS credentials not found.")
     except Exception as e:
         raise Exception(f"S3 Upload Error: {str(e)}")
+
+async def delete_image_from_s3(url: str):
+    """
+    Deletes an object from S3 given its public URL.
+    """
+    if not url or not AWS_BUCKET:
+        return
+
+        
+        
+    try:
+        # Extract the key from the URL
+        # URL format: https://bucket.s3.region.amazonaws.com/folder/filename.ext
+        if AWS_BUCKET in url:
+            key = url.split(f"{AWS_BUCKET}.s3.{AWS_REGION}.amazonaws.com/")[-1]
+            s3_client.delete_object(Bucket=AWS_BUCKET, Key=key)
+    except Exception as e:
+        print(f"⚠️ Failed to delete S3 object: {e}")

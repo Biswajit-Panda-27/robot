@@ -35,7 +35,7 @@ import GlassBot from "@/components/ui/GlassBot"
 import { cn } from "@/lib/utils"
 
 const AccountPage = () => {
-  const { user, logout, updateProfile, addAddress, updateAddress, deleteAddress } = useAuth()
+  const { user, logout, updateProfile, addAddress, updateAddress, deleteAddress, token } = useAuth()
   const { orders } = useOrders()
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -62,6 +62,7 @@ const AccountPage = () => {
   })
 
   const [loading, setLoading] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -97,18 +98,61 @@ const AccountPage = () => {
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDeleteAvatar = async (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent triggering the file input click
+    if (!window.confirm("Remove profile visual from grid?")) return
+
+    setUploadingAvatar(true)
+    try {
+      const res = await updateProfile({ ...profileForm, avatar: null })
+      if (res.success) {
+        setProfileForm({ ...profileForm, avatar: "" })
+        toast.success("Identity visual purged")
+      } else {
+        toast.error("Purge failed")
+      }
+    } catch (err) {
+      toast.error("Sync error")
+    } finally {
+      setUploadingAvatar(false)
+    }
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (file.size > 1024 * 1024) {
-        toast.error("File size must be less than 1MB")
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("File size must be less than 2MB")
         return
       }
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setProfileForm({ ...profileForm, avatar: reader.result as string })
+
+      const formData = new FormData()
+      formData.append("file", file)
+
+      setUploadingAvatar(true)
+      try {
+        // SECURITY FIX: Using native 'fetch' instead of axios
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/user/avatar`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          body: formData
+        })
+
+        const data = await response.json()
+
+        if (response.ok && data.success) {
+          setProfileForm({ ...profileForm, avatar: data.avatar })
+          toast.success("Profile visual synced to cloud!")
+        } else {
+          toast.error(data.detail || "Failed to upload to cloud")
+        }
+      } catch (error: any) {
+        toast.error("Network error: Failed to connect to identity grid")
+      } finally {
+        setUploadingAvatar(false)
       }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -188,7 +232,7 @@ const AccountPage = () => {
             <CardHeader className="pb-4">
               <div className="flex items-center gap-4">
                 <Avatar className="w-16 h-16 rounded-2xl border-2 border-primary/20 shadow-xl shadow-primary/10">
-                   <AvatarImage src={user.avatar} className="object-cover" />
+                   <AvatarImage src={profileForm.avatar} className="object-cover" />
                    <AvatarFallback className="bg-primary text-primary-foreground font-black text-xl">
                       {user.name.charAt(0)}
                    </AvatarFallback>
@@ -270,7 +314,7 @@ const AccountPage = () => {
                     <CardContent className="p-5">
                        <div className="flex justify-between items-start mb-3">
                           <Avatar className="w-10 h-10 rounded-xl border border-primary/20">
-                             <AvatarImage src={user.avatar} className="object-cover" />
+                             <AvatarImage src={profileForm.avatar} className="object-cover" />
                              <AvatarFallback className="bg-primary/10 text-primary font-black text-xs">
                                 {user.name.charAt(0)}
                              </AvatarFallback>
@@ -440,15 +484,33 @@ const AccountPage = () => {
                       {/* Avatar Section */}
                       <div className="flex flex-col items-center gap-6 mb-10">
                          <div className="relative group cursor-pointer" onClick={handleAvatarClick}>
-                            <Avatar className="w-32 h-32 rounded-[2.5rem] border-4 border-primary/20 shadow-2xl transition-transform group-hover:scale-105 duration-500">
+                            <Avatar className="w-32 h-32 rounded-[2.5rem] border-4 border-primary/20 shadow-2xl transition-transform group-hover:scale-105 duration-500 overflow-hidden">
+                               {uploadingAvatar ? (
+                                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-20 backdrop-blur-sm">
+                                     <ArrowClockwise size={32} className="text-primary animate-spin" weight="bold" />
+                                  </div>
+                               ) : null}
                                <AvatarImage src={profileForm.avatar} className="object-cover" />
                                <AvatarFallback className="bg-primary text-primary-foreground font-black text-3xl">
                                   {user.name.charAt(0)}
-                               </AvatarFallback>
+                                </AvatarFallback>
                             </Avatar>
+                            
+                            {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-black/40 rounded-[2.5rem] opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-500">
                                <CameraIcon size={32} className="text-white" weight="fill" />
                             </div>
+
+                            {/* Delete Button - Only visible if avatar exists */}
+                            {profileForm.avatar && (
+                              <button 
+                                onClick={handleDeleteAvatar}
+                                className="absolute -top-2 -right-2 w-8 h-8 bg-destructive text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-30"
+                                title="Remove Profile Visual"
+                              >
+                                <TrashIcon size={16} weight="bold" />
+                              </button>
+                            )}
                          </div>
                          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Click to update Identity Visual</p>

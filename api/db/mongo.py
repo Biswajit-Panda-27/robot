@@ -5,6 +5,7 @@ import importlib
 import inspect
 import pkgutil
 from api.db.redis_db import init_redis
+from api.utils.s3 import s3_client, AWS_BUCKET
 
 async def get_models():
     """
@@ -52,3 +53,14 @@ async def init_db():
     model_names = [model.__name__ for model in document_models]
     print(f"✅ Connected to MongoDB: {db_name}")
     print(f"📦 Registered Models: {', '.join(model_names)}")
+
+    # 3. Initialize & Validate AWS S3
+    try:
+        if not AWS_BUCKET or "your_bucket" in AWS_BUCKET:
+            print("⚠️ AWS S3: Configuration missing or using placeholders")
+        else:
+            # Simple check to see if we can talk to S3
+            s3_client.head_bucket(Bucket=AWS_BUCKET)
+            print(f"🚀 Cloud Storage Active: {AWS_BUCKET}")
+    except Exception as e:
+        print(f"❌ Cloud Storage Error: {str(e)}")

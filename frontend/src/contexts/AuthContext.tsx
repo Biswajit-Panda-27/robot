@@ -18,6 +18,8 @@ interface User {
   token?: string;
   role?: string;
   addresses: Address[];
+  avatar?: string;
+  dob?: string;
   created_at?: string;
 }
 
@@ -35,6 +37,7 @@ interface AuthContextType {
   deleteAddress: (addressId: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   isAuthenticated: boolean;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -256,7 +259,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthContext.Provider value={{ 
       user, register, setPassword, login, verifyOTP, googleLogin, 
-      fetchMe, updateProfile, addAddress, updateAddress, deleteAddress, logout, isAuthenticated: !!user 
+      fetchMe, updateProfile, addAddress, updateAddress, deleteAddress, logout, 
+      isAuthenticated: !!user,
+      token: user?.token || null
     }}>
       {children}
     </AuthContext.Provider>
