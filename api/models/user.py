@@ -16,8 +16,8 @@ class User(Document):
     email: EmailStr 
     
     # Auth Methods
-    password: Optional[str] = None # Optional because Google users don't have one
-    google_id: Optional[str] = None # Unique ID from Google
+    password: Optional[str] = None 
+    google_id: Optional[str] = None 
     
     # Profile & Location
     address: Optional[Address] = None
@@ -25,9 +25,12 @@ class User(Document):
     # Metadata & Security
     is_active: bool = True
     role: Literal["user", "admin"] = "user"
+    is_verified: bool = False 
     
-    # Flow Control
-    is_verified: bool = False # For the Email OTP flow later
+    # Flow Control (Required for Email/OTP flow)
+    verification_token: Optional[str] = None 
+    otp_code: Optional[str] = None 
+    otp_expires_at: Optional[datetime] = None
     
     # Timestamps
     created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -4,6 +4,7 @@ import os
 import importlib
 import inspect
 import pkgutil
+from api.db.redis_db import init_redis
 
 async def get_models():
     """
@@ -30,6 +31,9 @@ async def get_models():
     return models
 
 async def init_db():
+    # 1. Initialize Redis
+    await init_redis()
+
     mongo_uri = os.getenv("MONGO_URI")
     db_name = os.getenv("DB_NAME")
     

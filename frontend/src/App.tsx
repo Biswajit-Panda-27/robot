@@ -13,6 +13,7 @@ import CartPage from "@/pages/CartPage"
 import OrdersPage from "@/pages/OrdersPage"
 import PurchasePage from "@/pages/PurchasePage"
 import AccountPage from "@/pages/AccountPage"
+import SetPasswordPage from "@/pages/SetPasswordPage"
 
 const App = () => {
   useEffect(() => {
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/purchase" element={<PurchasePage />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/set-password" element={<SetPasswordPage />} />
           </Routes>
         </main>
         <Footer />

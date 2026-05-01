@@ -1,11 +1,14 @@
+from dotenv import load_dotenv
+import os
+
+# Load environment variables early
+load_dotenv(".env.development")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from api.db.mongo import init_db
 from api.routes import index
-from dotenv import load_dotenv
-import os
-
 # Load environment variables
 load_dotenv(".env.development")
 
