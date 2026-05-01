@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import AOS from "aos"
 import "aos/dist/aos.css"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
@@ -43,6 +45,19 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        <ToastContainer 
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          className="font-sans"
+        />
       </div>
     </Router>
   )

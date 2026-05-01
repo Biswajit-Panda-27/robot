@@ -1,33 +1,43 @@
-from typing import Optional, Literal
+from typing import Optional, Literal, List
 from datetime import datetime
 from beanie import Document
 from pydantic import BaseModel, EmailStr, Field
 from pymongo import IndexModel, ASCENDING
+import uuid
 
 class Address(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    label: Optional[str] = "Home" 
     state: Optional[str] = None
     city: Optional[str] = None
     landmark: Optional[str] = None
     pincode: Optional[str] = None
+    is_default: bool = False
 
 class User(Document):
     # Core Identity
     name: str = Field(..., min_length=2, max_length=100)
     email: EmailStr 
+    mobile: Optional[str] = None
+    secondary_mobile: Optional[str] = None
+    
+    # Premium Identity
+    dob: Optional[str] = None
+    avatar: Optional[str] = None # URL or Base64
     
     # Auth Methods
     password: Optional[str] = None 
     google_id: Optional[str] = None 
     
     # Profile & Location
-    address: Optional[Address] = None
+    addresses: List[Address] = []
     
     # Metadata & Security
     is_active: bool = True
     role: Literal["user", "admin"] = "user"
     is_verified: bool = False 
     
-    # Flow Control (Required for Email/OTP flow)
+    # Flow Control
     verification_token: Optional[str] = None 
     otp_code: Optional[str] = None 
     otp_expires_at: Optional[datetime] = None
@@ -40,6 +50,4 @@ class User(Document):
         name = "users"
         indexes = [
             IndexModel([("email", ASCENDING)], unique=True),
-            IndexModel([("google_id", ASCENDING)], unique=True, sparse=True),
         ]
-        use_revision = True 

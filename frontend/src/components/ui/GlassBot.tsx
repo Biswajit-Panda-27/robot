@@ -2,8 +2,8 @@ import { useState, useRef } from "react"
 import { motion, useMotionValue, useSpring, AnimatePresence, useTransform, MotionValue } from "framer-motion"
 
 interface GlassBotProps {
-  rotateX: MotionValue<number>
-  rotateY: MotionValue<number>
+  rotateX?: MotionValue<number>
+  rotateY?: MotionValue<number>
   className?: string
   scale?: number
 }
@@ -18,6 +18,12 @@ const GlassBot = ({ rotateX: propRotateX, rotateY: propRotateY, className = "", 
   const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const angryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Internal fallback motion values if props are not provided
+  const defaultX = useMotionValue(0)
+  const defaultY = useMotionValue(0)
+  const rotateX = propRotateX || defaultX
+  const rotateY = propRotateY || defaultY
+
   // Internal Drag Offsets
   const dragX = useMotionValue(0)
   const dragY = useMotionValue(0)
@@ -25,8 +31,8 @@ const GlassBot = ({ rotateX: propRotateX, rotateY: propRotateY, className = "", 
   const springDragY = useSpring(dragY, { stiffness: 100, damping: 30 })
 
   // Combined Rotation
-  const combinedRotateX = useTransform([propRotateX, springDragX], ([px, dx]) => (px as number) + (dx as number))
-  const combinedRotateY = useTransform([propRotateY, springDragY], ([py, dy]) => (py as number) + (dy as number))
+  const combinedRotateX = useTransform([rotateX, springDragX], ([px, dx]) => (px as number) + (dx as number))
+  const combinedRotateY = useTransform([rotateY, springDragY], ([py, dy]) => (py as number) + (dy as number))
 
   const handleDrag = (_: any, info: any) => {
     dragX.set(dragX.get() - info.delta.y * 0.4)
