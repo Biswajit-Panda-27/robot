@@ -16,6 +16,7 @@ import OrdersPage from "@/pages/OrdersPage"
 import PurchasePage from "@/pages/PurchasePage"
 import AccountPage from "@/pages/AccountPage"
 import SetPasswordPage from "@/pages/SetPasswordPage"
+import ProductPage from "@/pages/ProductPage"
 
 const App = () => {
   useEffect(() => {
@@ -32,10 +33,11 @@ const App = () => {
       <div className="min-h-screen flex flex-col selection:bg-accent selection:text-white">
         <AnnouncementBar />
         <Navbar />
-        <main className="flex-grow">
+        <main className="grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/orders" element={<OrdersPage />} />
