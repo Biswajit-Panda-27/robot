@@ -45,22 +45,22 @@ async def init_db():
     
     # Dynamically discover all models
     document_models = await get_models()
-    print(f"🔍 Discovered {len(document_models)} models: {[m.__name__ for m in document_models]}")
+    print(f"[DB-DISCOVERY] Discovered {len(document_models)} models: {[m.__name__ for m in document_models]}")
     
-    print("🚀 Initializing Beanie...")
+    print("[DB-INIT] Initializing Beanie...")
     await init_beanie(database=client[db_name], document_models=document_models)
     
     model_names = [model.__name__ for model in document_models]
-    print(f"✅ Connected to MongoDB: {db_name}")
-    print(f"📦 Registered Models: {', '.join(model_names)}")
+    print(f"[DB-SUCCESS] Connected to MongoDB: {db_name}")
+    print(f"[DB-MODELS] Registered Models: {', '.join(model_names)}")
 
     # 3. Initialize & Validate AWS S3
     try:
         if not AWS_BUCKET or "your_bucket" in AWS_BUCKET:
-            print("⚠️ AWS S3: Configuration missing or using placeholders")
+            print("[S3-WARNING] AWS S3: Configuration missing or using placeholders")
         else:
             # Simple check to see if we can talk to S3
             s3_client.head_bucket(Bucket=AWS_BUCKET)
-            print(f"🚀 Cloud Storage Active: {AWS_BUCKET}")
+            print(f"[S3-SUCCESS] Cloud Storage Active: {AWS_BUCKET}")
     except Exception as e:
-        print(f"❌ Cloud Storage Error: {str(e)}")
+        print(f"[S3-ERROR] Cloud Storage Error: {str(e)}")

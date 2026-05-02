@@ -26,7 +26,12 @@ class Product(Document):
     
     # Discovery & Social Proof
     product_rating: float = Field(default=0, ge=0, le=5)
+    product_reviews_count: int = Field(default=0, ge=0)
     product_reviews: Optional[str] = None
+    
+    # Detailed Info
+    product_features: List[str] = [] # Key highlights
+    product_specs: List[dict] = [] # Technical details [{ "label": "CPU", "value": "Quad-core 2.4GHz" }]
     
     # Timestamps
     created_at: datetime = Field(default_factory=datetime.utcnow)

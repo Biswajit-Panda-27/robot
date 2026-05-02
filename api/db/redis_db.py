@@ -12,10 +12,10 @@ async def init_redis():
     """
     try:
         await redis_client.ping()
-        print(f"🚀 Connected to Redis: {REDIS_URL}")
+        print(f"[RE-CONNECTED] Connected to Redis: {REDIS_URL}")
         return True
     except Exception as e:
-        print(f"❌ Redis Connection Error: {e}")
+        print(f"[RE-ERROR] Redis Connection Error: {e}")
         return False
 
 async def set_code(key: str, value: str, expire_seconds: int = 600):
