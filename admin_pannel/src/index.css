@@ -1,0 +1,158 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-mono);
+  --font-mono: 'JetBrains Mono Variable', monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-glass: var(--glass);
+  --color-glass-foreground: var(--glass-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #F4EEFF;
+  --foreground: #424874;
+  --card: #FFFFFF;
+  --card-foreground: #424874;
+  --popover: #FFFFFF;
+  --popover-foreground: #424874;
+  --primary: #424874;
+  --primary-foreground: #F4EEFF;
+  --secondary: #DCD6F7;
+  --secondary-foreground: #424874;
+  --muted: #DCD6F7;
+  --muted-foreground: #A6B1E1;
+  --accent: #A6B1E1;
+  --accent-foreground: #424874;
+  --success: #10B981;
+  --success-foreground: #FFFFFF;
+  --warning: #F59E0B;
+  --warning-foreground: #FFFFFF;
+  --info: #3B82F6;
+  --info-foreground: #FFFFFF;
+  --destructive: #FF4D4D;
+  --destructive-foreground: #FFFFFF;
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-foreground: #424874;
+  --border: #A6B1E1;
+  --input: #A6B1E1;
+  --ring: #424874;
+  --chart-1: #424874;
+  --chart-2: #A6B1E1;
+  --chart-3: #DCD6F7;
+  --chart-4: #F4EEFF;
+  --chart-5: #6366f1;
+  --radius: 0.75rem;
+  --sidebar: #DCD6F7;
+  --sidebar-foreground: #424874;
+  --sidebar-primary: #424874;
+  --sidebar-primary-foreground: #F4EEFF;
+  --sidebar-accent: #A6B1E1;
+  --sidebar-accent-foreground: #424874;
+  --sidebar-border: #A6B1E1;
+  --sidebar-ring: #424874;
+}
+
+.dark {
+  --background: #1A1A2E;
+  --foreground: #EEEEEE;
+  --card: #16213E;
+  --card-foreground: #EEEEEE;
+  --popover: #16213E;
+  --popover-foreground: #EEEEEE;
+  --primary: #0F3460;
+  --primary-foreground: #EEEEEE;
+  --secondary: #16213E;
+  --secondary-foreground: #EEEEEE;
+  --muted: #16213E;
+  --muted-foreground: #A6B1E1;
+  --accent: #0F3460;
+  --accent-foreground: #EEEEEE;
+  --success: #059669;
+  --success-foreground: #EEEEEE;
+  --warning: #D97706;
+  --warning-foreground: #EEEEEE;
+  --info: #2563EB;
+  --info-foreground: #EEEEEE;
+  --destructive: #E94560;
+  --destructive-foreground: #EEEEEE;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-foreground: #EEEEEE;
+  --border: #0F3460;
+  --input: #0F3460;
+  --ring: #EEEEEE;
+  --chart-1: #0F3460;
+  --chart-2: #16213E;
+  --chart-3: #1A1A2E;
+  --chart-4: #E94560;
+  --chart-5: #EEEEEE;
+  --sidebar: #16213E;
+  --sidebar-foreground: #EEEEEE;
+  --sidebar-primary: #0F3460;
+  --sidebar-primary-foreground: #EEEEEE;
+  --sidebar-accent: #1A1A2E;
+  --sidebar-accent-foreground: #EEEEEE;
+  --sidebar-border: #0F3460;
+  --sidebar-ring: #EEEEEE;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-mono;
+  }
+}
